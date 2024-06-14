@@ -1,9 +1,11 @@
+// SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.0;
 
 import "./sampleNFT.sol"; 
 
-contract MusicMarketplace {
-    struct Music {
+contract SampleMarketplace {
+    struct SampleMusic {
         uint256 id;
         address artist;       
         string uri;
@@ -14,38 +16,39 @@ contract MusicMarketplace {
     struct Purchase {
         address owner;
         uint256 timestamp;
+		string uriContent;
         bool isUsed;
     }
 
-    MusicNFT public musicNft;
-    mapping(uint256 => Music) public musicIdToMusic;
+    SampleNFT public SampleNFT;
+    mapping(uint256 => SampleMusic) public sampleIdToSample;
     mapping(uint256 => Purchase[]) public purchaseRecords;
-    uint256 public nextMusicId;
+    uint256 public nextSampleId;
 
-    event MusicUploaded(uint256 indexed musicId, address indexed artist, string rights, uint256 price);
-    event MusicPurchased(uint256 indexed musicId, address indexed owner, uint256 timestamp);
+    event SampleUploaded(uint256 indexed sampleId, address indexed artist, string rights, uint256 price);
+    event SamplePurchased(uint256 indexed sampleId, address indexed owner, uint256 timestamp);
 
-    constructor(address _musicNftAddress) {
-        musicNft = MusicNFT(_musicNftAddress);
-        nextMusicId = 1;
+    constructor(address _sampleNftAddress) {
+        sampleNFT = SampleNFT(_sampleNftAddress);
+        nextSampleId = 1;
     }
 
-    function uploadMusic(string memory uri, string memory rights, uint256 price) external {
-        musicIdToMusic[nextMusicId] = Music(nextMusicId, msg.sender, uri, rights, price);
-        emit MusicUploaded(nextMusicId, msg.sender, rights, price);
-        nextMusicId++;
+    function uploadSample(string memory _uri, string memory _rights, uint256 _price) external {
+        sampleIdToSample[nextSampleId] = SampleMusic(nextSampleId, msg.sender, _uri, _rights, _price);
+        emit SampleUploaded(nextSampleId, msg.sender, _rights, _price);
+        nextSampleId++;
     }
 
-    function purchaseMusic(uint256 musicId) external payable {
-        Music memory music = musicIdToMusic[musicId];
-        require(msg.value == music.price, "Incorrect payment amount");
-        require(music.artist != address(0), "Music does not exist");
+    function purchaseSample(uint256 _sampleId) external payable {
+        Sample memory sample = musicIdToMusic[_sampleId];
+        require(msg.value == sample.price, "Incorrect payment amount");
+        require(sample.artist != address(0), "Sample does not exist");
 
-        payable(music.artist).transfer(msg.value);
-        purchaseRecords[musicId].push(Purchase(msg.sender, block.timestamp));
-        emit MusicPurchased(musicId, msg.sender, block.timestamp);
+        payable(sample.artist).transfer(msg.value);
+        purchaseRecords[_sampleId].push(Purchase(msg.sender, block.timestamp));
+        emit MusicPurchased(_sampleId, msg.sender, block.timestamp);
 
         // Optionally mint an NFT for the owner
-        musicNft.mintNFT(msg.sender, music.uri);
+        SampleNFT.mintNFT(msg.sender, sample.uri);
     }
 }
