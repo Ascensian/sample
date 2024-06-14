@@ -64,9 +64,9 @@ contract Sample {
             )
         );
     }
-
+ 
 	function getArtitst(address _artist) external view returns (Artist memory) {
 		return artists[_artist];
 	}
-	
+
 }
