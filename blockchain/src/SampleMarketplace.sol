@@ -1,26 +1,64 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
-import "./sampleNFT.sol"; 
+import "./sampleNFT.sol";
 
 contract SampleMarketplace {
+    struct DescriptionPreimage {
+        bool has_preimage;
+        bytes32 preimage;
+    }
+
+    enum ArtistType {
+        Singer,
+        Instrumentalist,
+        Composer,
+        Lyricist,
+        Producer,
+        DiscJokey,
+        Conductor,
+        Arranger,
+        Engineer,
+        Director
+    }
+
+    struct ArtistData {
+        address owner;
+        uint32 registered_at;
+        string main_name;
+        ArtistType main_type;
+        ArtistType[] extra_types;
+        bytes[] genres;
+        DescriptionPreimage description;
+        bytes32[] assets;
+    }
+
+    struct Artist {
+        bool is_artist;
+        ArtistData data;
+    }
+
+    struct Totalsupplies {
+        uint256 totalSupply;
+        uint256 totalSold;
+    }
+
     struct SampleMusic {
         uint256 id;
-        address artist;       
+        Artist artist;
         string uri;
-        string rights;
+        Totalsupplies totalsupplies;
         uint256 price;
     }
 
     struct Purchase {
         address owner;
         uint256 timestamp;
-		string uriContent;
-        bool isUsed;
+        string uriContent;
     }
 
-    SampleNFT public SampleNFT;
+    SampleNFT public sampleNFT;
     mapping(uint256 => SampleMusic) public sampleIdToSample;
     mapping(uint256 => Purchase[]) public purchaseRecords;
     uint256 public nextSampleId;
@@ -30,7 +68,7 @@ contract SampleMarketplace {
 
     constructor(address _sampleNftAddress) {
         sampleNFT = SampleNFT(_sampleNftAddress);
-        nextSampleId = 1;
+        nextSampleId = 0;
     }
 
     function uploadSample(string memory _uri, string memory _rights, uint256 _price) external {
@@ -49,6 +87,6 @@ contract SampleMarketplace {
         emit MusicPurchased(_sampleId, msg.sender, block.timestamp);
 
         // Optionally mint an NFT for the owner
-        SampleNFT.mintNFT(msg.sender, sample.uri);
+        sampleNFT.mintNFT(msg.sender, sample.uri);
     }
 }

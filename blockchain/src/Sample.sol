@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 contract Sample {
     struct DescriptionPreimage {
@@ -64,9 +64,8 @@ contract Sample {
             )
         );
     }
- 
-	function getArtitst(address _artist) external view returns (Artist memory) {
-		return artists[_artist];
-	}
 
+    function getArtitst(address _artist) external view returns (Artist memory) {
+        return artists[_artist];
+    }
 }
