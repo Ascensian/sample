@@ -55,7 +55,7 @@ contract Sample {
     mapping(address => Artist) public addressToArtist;
     mapping(address => SampleMusic[]) public addressToSampleMusicTab;
     mapping(address => address) public ownerToNFT;
-	mapping(address => mapping(uint256 => uint)) public addressToTokenIdToPrice;
+    mapping(address => mapping(uint256 => uint256)) public addressToTokenIdToPrice;
 
     modifier onlyNotRegister() {
         require(addressToArtist[msg.sender].data.registered_at != 0, "You are already register");
@@ -94,9 +94,9 @@ contract Sample {
         emit ArtistRegistered(msg.sender, _mainName, addressToArtist[msg.sender].data.registered_at);
     }
 
-	function setPriceToArtist(address _artist, uint256 _tokenId, uint _price) public {
-		addressToTokenIdToPrice[_artist][_tokenId] = _price;
-	}
+    function setPriceToArtist(address _artist, uint256 _tokenId, uint256 _price) public {
+        addressToTokenIdToPrice[_artist][_tokenId] = _price;
+    }
 
     function setAddressToArtist(Artist memory _artist) public {
         addressToArtist[msg.sender] = _artist;
