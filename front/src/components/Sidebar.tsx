@@ -52,27 +52,27 @@ const Sidebar = () => {
           />
         </a>
         <div className="nav_link_container">
-          <a href="#" className={`nav_link ${styles.nav_link} active`}>
+          <a href="/" className={`nav_link ${styles.nav_link} active`}>
             <FaHome className="nav_icon" />
             <span className="nav_name">Home</span>
           </a>
-          <a href="#" className={`nav_link ${styles.nav_link}`}>
+          <a href="/" className={`nav_link ${styles.nav_link}`}>
             <FaSearch className="nav_icon" />
             <span className="nav_name">Search</span>
           </a>
-          <a href="#" className={`nav_link ${styles.nav_link}`}>
+          <a href="/" className={`nav_link ${styles.nav_link}`}>
             <FaBookOpen className="nav_icon" />
             <span className="nav_name">Library</span>
           </a>
-          <a href="#" className={`nav_link ${styles.nav_link}`}>
+          <a href="/" className={`nav_link ${styles.nav_link}`}>
             <FaBookOpen className="nav_icon" />
             <span className="nav_name">My Licences</span>
           </a>
-          <a href="#" className={`nav_link ${styles.nav_link}`}>
+          <a href="/" className={`nav_link ${styles.nav_link}`}>
             <FaUpload className="nav_icon" />
             <span className="nav_name">Upload a song</span>
           </a>
-          <a href="#" className={`nav_link ${styles.nav_link}`}>
+          <a href="/" className={`nav_link ${styles.nav_link}`}>
             <FaUser className="nav_icon" />
             <span className="nav_name">Profil</span>
           </a>

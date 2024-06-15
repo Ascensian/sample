@@ -1,6 +1,17 @@
 import React, { useState } from 'react';
 import Track from './Track';
 import Player from './Player';
+import { Howl } from 'howler';
+
+interface TrackDetail {
+  id: string;
+  src: string;
+  title: string;
+  artist: string;
+  album: string;
+  duration: string;
+  imageUrl: string;
+}
 
 const MusicInstances = [
   {
@@ -60,10 +71,11 @@ const MusicInstances = [
 ];
 
 export default function MusicPage() {
-  //global states
-  const [isPlaying, setIsPlaying] = useState<boolean>(false); //whether the music is being played across the page
-  const [selectedMusic, setSelectedMusic] = useState<Howl | null>(null); //to hold music property that is created via Howl
-  const [trackDetail, setTrackDetail] = useState<string>(); //track information to be displayed among components
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [selectedMusic, setSelectedMusic] = useState<Howl | null>(null);
+  const [trackDetail, setTrackDetail] = useState<TrackDetail | undefined>(
+    undefined,
+  );
 
   return (
     <>
@@ -75,7 +87,8 @@ export default function MusicPage() {
               setIsPlaying={setIsPlaying}
               selectedMusic={selectedMusic}
               setSelectedMusic={setSelectedMusic}
-              setTrackDetail={setTrackDetail}
+              // Pass the entire track object when setting the track detail
+              setTrackDetail={() => setTrackDetail(track)}
               track={track}
               isFirstTrack={index === 0}
             />
@@ -84,9 +97,10 @@ export default function MusicPage() {
       </ul>
       <Player
         isPlaying={isPlaying}
-        setIsPlaying={setIsPlaying} //check and set whether music is being played
-        selectedMusic={selectedMusic} //to have access to music property and apply necessary  changes
-        trackDetail={trackDetail} //sending music title to be displayed in component
+        setIsPlaying={setIsPlaying}
+        selectedMusic={selectedMusic}
+        // Ensure the Player component can accept and utilize the expanded trackDetail
+        trackDetail={trackDetail}
       />
     </>
   );
