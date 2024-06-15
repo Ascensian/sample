@@ -5,6 +5,9 @@ pragma solidity ^0.8.20;
 import "./sampleNFT.sol";
 
 contract SampleMarketplace {
+    event SampleUploaded(uint256 indexed sampleId, address indexed artist, string rights, uint256 price);
+    event SamplePurchased(uint256 indexed sampleId, address indexed owner, uint256 timestamp);
+
     struct DescriptionPreimage {
         bool has_preimage;
         bytes32 preimage;
@@ -60,11 +63,8 @@ contract SampleMarketplace {
 
     SampleNFT public sampleNFT;
     mapping(uint256 => SampleMusic) public sampleIdToSample;
-    mapping(uint256 => Purchase[]) public purchaseRecords;
+    mapping(uint256 => Purchase[]) public sampleIdToPurchaseRecords;
     uint256 public nextSampleId;
-
-    event SampleUploaded(uint256 indexed sampleId, address indexed artist, string rights, uint256 price);
-    event SamplePurchased(uint256 indexed sampleId, address indexed owner, uint256 timestamp);
 
     constructor(address _sampleNftAddress) {
         sampleNFT = SampleNFT(_sampleNftAddress);

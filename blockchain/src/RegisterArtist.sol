@@ -2,7 +2,9 @@
 
 pragma solidity ^0.8.20;
 
-contract Sample {
+contract RegisterArtist {
+    event ArtistRegistered(address indexed artist, string mainName, uint32 registeredAt);
+
     struct DescriptionPreimage {
         bool has_preimage;
         bytes32 preimage;
@@ -44,10 +46,6 @@ contract Sample {
         _;
     }
 
-    /*modifier onlyNotEmpty(string memory _mainName, ArtistType _main_type, bytes[] memory _genres) {
-        require
-    }*/
-
     function registerArtists(
         bool _isArtist,
         string memory _mainName,
@@ -63,6 +61,7 @@ contract Sample {
                 msg.sender, uint32(block.timestamp), _mainName, _mainType, _extraTypes, _genres, _description, _assets
             )
         );
+        emit ArtistRegistered(msg.sender, _mainName, artists[msg.sender].data.registered_at);
     }
 
     function getArtitst(address _artist) external view returns (Artist memory) {
