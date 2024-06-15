@@ -29,7 +29,7 @@ export default function RootLayout({
         <Header />
 
         <Sidebar />
-        <main className="flex flex-col items-center justify-between">
+        <main className="flex flex-col justify-between">
           {children}
           {/* Ensure Footer is rendered within the body */}
 

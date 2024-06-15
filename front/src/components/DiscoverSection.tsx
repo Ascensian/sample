@@ -1,108 +1,55 @@
 import React from 'react';
-import Carousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
+import Image from 'next/image';
 
-const responsive = {
-  superLargeDesktop: {
-    breakpoint: { max: 4000, min: 3000 },
-    items: 10,
-  },
-  desktop: {
-    breakpoint: { max: 3000, min: 1024 },
-    items: 10,
-  },
-  tablet: {
-    breakpoint: { max: 1024, min: 464 },
-    items: 10,
-  },
-  mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 5,
-  },
+const DiscoverSection = () => {
+  return (
+    <>
+      <h1 className="text-white font-bold text-2xl mt-4 mb-4 ml-8 text-left">
+        DISCOVER
+      </h1>
+
+      <div className="gallery-container relative ml-4">
+        <div
+          className="images-container flex overflow-x-auto gap-4 scrollbar-hide"
+          id="imagesContainer"
+        >
+          <div>
+            <Image src="/images/energic.png" alt="" width="300" height="300" />
+          </div>
+
+          <div>
+            <Image src="/images/indie.png" alt="" width="300" height="300" />
+          </div>
+          <div>
+            <Image src="/images/jazz.png" alt="" width="300" height="300" />
+          </div>
+          <div>
+            <Image src="/images/morning.png" alt="" width="300" height="300" />
+          </div>
+          <div>
+            <Image src="/images/New.png" alt="" width="300" height="300" />
+          </div>
+          <div>
+            <Image src="/images/peaceful.png" alt="" width="300" height="300" />
+          </div>
+
+          <div>
+            <Image src="/images/popular.png" alt="" width="300" height="300" />
+          </div>
+          <div>
+            <Image src="/images/recent.png" alt="" width="300" height="300" />
+          </div>
+
+          <div>
+            <Image src="/images/trend.png" alt="" width="300" height="300" />
+          </div>
+          <div>
+            <Image src="/images/energic.png" alt="" width="300" height="300" />
+          </div>
+        </div>
+      </div>
+    </>
+  );
 };
-
-const DiscoverSection = () => (
-  <>
-    <h1
-      style={{
-        color: 'white',
-        fontSize: '2rem',
-        paddingLeft: '2rem',
-        fontWeight: 'bold',
-      }}
-    >
-      DISCOVER
-    </h1>
-
-    <div
-      style={{
-        paddingLeft: '2rem',
-      }}
-    >
-      <Carousel responsive={responsive} itemClass="carousel-item-padding-10-px">
-        <div>
-          <img src="/images/energic.png" alt="" />
-        </div>
-
-        <div>
-          <img src="/images/indie.png" alt="" />
-        </div>
-        <div>
-          <img src="/images/jazz.png" alt="" />
-        </div>
-        <div>
-          <img src="/images/morning.png" alt="" />
-        </div>
-        <div>
-          <img src="/images/New.png" alt="" />
-        </div>
-        <div>
-          <img src="/images/peaceful.png" alt="" />
-        </div>
-
-        <div>
-          <img src="/images/popular.png" alt="" />
-        </div>
-        <div>
-          <img src="/images/recent.png" alt="" />
-        </div>
-
-        <div>
-          <img src="/images/trend.png" alt="" />
-        </div>
-        <div>
-          <img src="/images/energic.png" alt="" />
-        </div>
-
-        <div>
-          <img src="/images/indie.png" alt="" />
-        </div>
-        <div>
-          <img src="/images/jazz.png" alt="" />
-        </div>
-        <div>
-          <img src="/images/morning.png" alt="" />
-        </div>
-        <div>
-          <img src="/images/New.png" alt="" />
-        </div>
-        <div>
-          <img src="/images/peaceful.png" alt="" />
-        </div>
-
-        <div>
-          <img src="/images/popular.png" alt="" />
-        </div>
-        <div>
-          <img src="/images/recent.png" alt="" />
-        </div>
-
-        <div>
-          <img src="/images/trend.png" alt="" />
-        </div>
-      </Carousel>
-    </div>
-  </>
-);
 
 export default DiscoverSection;

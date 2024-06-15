@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
 
 :root {
@@ -11,10 +15,43 @@
   --z-fixed: 100;
 }
 
+.gallery-container {
+  position: relative;
+}
+
+#scrollLeft, #scrollRight {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #fff;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+}
+
+#scrollLeft {
+  left: 10px;
+}
+
+#scrollRight {
+  right: 10px;
+}
+
 *,
 ::before,
 ::after {
   box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  scrollbar-width: none; /* Pour Firefox */
+  -ms-overflow-style: none; /* Pour Internet Explorer et Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Pour WebKit (Chrome, Safari, etc.) */
 }
 
 html {

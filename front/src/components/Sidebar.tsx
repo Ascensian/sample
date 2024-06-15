@@ -72,7 +72,7 @@ const Sidebar = () => {
             <FaUpload className="nav_icon" />
             <span className="nav_name">Upload a song</span>
           </a>
-          <a href="/" className={`nav_link ${styles.nav_link}`}>
+          <a href="/register" className={`nav_link ${styles.nav_link}`}>
             <FaUser className="nav_icon" />
             <span className="nav_name">Profil</span>
           </a>
