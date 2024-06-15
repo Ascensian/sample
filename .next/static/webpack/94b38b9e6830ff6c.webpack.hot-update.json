@@ -1,0 +1,1 @@
+{"c":["pages/index","webpack"],"r":[],"m":["./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[6].oneOf[9].use[1]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[6].oneOf[9].use[2]!./src/styles/header.module.css","./src/components/ConnectWalletButton.tsx","./src/styles/header.module.css"]}
