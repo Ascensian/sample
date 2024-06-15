@@ -1,0 +1,14 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES5",
+    "noEmitOnError": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "esModuleInterop": true
+  },
+  "exclude": ["node_modules"]
+}
