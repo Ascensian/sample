@@ -68,7 +68,7 @@ const Sidebar = () => {
             <FaBookOpen className="nav_icon" />
             <span className="nav_name">My Licences</span>
           </a>
-          <a href="/" className={`nav_link ${styles.nav_link}`}>
+          <a href="/upload" className={`nav_link ${styles.nav_link}`}>
             <FaUpload className="nav_icon" />
             <span className="nav_name">Upload a song</span>
           </a>

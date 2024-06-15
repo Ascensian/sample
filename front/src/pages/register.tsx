@@ -48,11 +48,17 @@ export default function RegisterArtist() {
   const [mainType, setMainType] = useState<ArtistType | null>(null);
   const [extraTypes, setExtraTypes] = useState<ArtistType[]>([]);
   const [assets, setAssets] = useState<string[]>([]);
+  const [submittedArtistData, setSubmittedArtistData] = useState(null);
 
   const [artistRegistered, setArtistRegistered] = useState<boolean>(false);
 
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsArtist(event.target.checked);
+  };
+
   const getAddress = () => {
     const data = localStorage.getItem('address');
+    console.log(data);
 
     if (data) {
       const parsedData = JSON.parse(data);
@@ -76,7 +82,7 @@ export default function RegisterArtist() {
     getAddress();
   }, []);
 
-  const contractAddress = '0x063DF104b96DE5828b1f3430668C35A3d97Fc73F';
+  const contractAddress = '0xeCd63E3c7128020C4Cb10D5d393A6cBDba1384Ec';
 
   const registerArtist = useCallback(async () => {
     if (
@@ -85,28 +91,36 @@ export default function RegisterArtist() {
       signer &&
       artistAddress &&
       mainName &&
-      mainType &&
-      extraTypes &&
-      assets
+      mainType != null && // Ensure mainType is not null
+      extraTypes.length > 0 && // Ensure extraTypes is not empty
+      assets.length > 0 // Ensure assets is not empty
     ) {
       const contract = new ethers.Contract(contractAddress, ABI, signer);
 
-      const artistAddressAsBytes32 = ethers.encodeBytes32String(artistAddress);
-      const mainNameAsBytes32 = ethers.encodeBytes32String(mainName);
-      const mainTypeAsBytes32 = ethers.encodeBytes32String(mainType);
-      const extraTypesAsBytes32 = ethers.encodeBytes32String(extraTypes);
-      const assetsAsBytes32 = ethers.encodeBytes32String(assets);
+      // Correctly encode the data for blockchain
+      const genresAsBytes = genres.map(ethers.utils.toUtf8Bytes);
+      const assetsAsBytes32 = assets.map(ethers.utils.formatBytes32String);
 
-      // Now you can call your smart contract function with these values
-      await contract.registerArtist(
+      // Correct the function call to match the ABI
+      await contract.registerArtists(
         isArtist,
-        contractAddress,
-        artistAddressAsBytes32,
-        mainNameAsBytes32,
-        mainTypeAsBytes32,
-        extraTypesAsBytes32,
+        mainName,
+        mainType,
+        extraTypes,
+        genresAsBytes,
         assetsAsBytes32,
       );
+
+      // Update state with submitted data
+      setSubmittedArtistData({
+        isArtist,
+        artistAddress,
+        mainName,
+        mainType,
+        extraTypes,
+        genres,
+        assets,
+      });
 
       setArtistRegistered(true);
     }
@@ -118,6 +132,7 @@ export default function RegisterArtist() {
     mainName,
     mainType,
     extraTypes,
+    genres,
     assets,
   ]);
 
@@ -129,12 +144,24 @@ export default function RegisterArtist() {
     <>
       <Sidebar />
       <main className="flex flex-col min-h-screen w-full">
-        <section className="flex flex-col justify-center items-center mt-32 w-full">
-          <h1 className="mt-2 text-2xl font-semibold text-white mb-4">
+        <section className="flex flex-col justify-center items-left w-1/4">
+          <h1 className="mt-2 text-2xl font-semibold text-white mb-4 ml-12">
             Register as Artist
           </h1>
 
           <div className="flex flex-col gap-2 px-12">
+            <div className="block mt-4">
+              <label className="font-bold text-white mr-4" htmlFor="isArtist">
+                Are you an artist?
+                <input
+                  id="isArtist"
+                  type="checkbox"
+                  checked={isArtist}
+                  onChange={handleCheckboxChange}
+                  className="ml-2 mb-1"
+                />
+              </label>
+            </div>
             <div className="block mt-4">
               <Label
                 className="font-bold text-white"
@@ -234,9 +261,23 @@ export default function RegisterArtist() {
             </div>
           </div>
 
-          <Button className="mt-6" color="warning" onClick={registerArtist}>
+          <Button
+            className="mt-6 ml-12 w-1/2"
+            color="purple"
+            onClick={registerArtist}
+          >
             Submit
           </Button>
+        </section>
+        <section>
+          {submittedArtistData && (
+            <div className="submitted-data">
+              <h2>Artist Data Submitted</h2>
+              <p>Main Name: {submittedArtistData.mainName}</p>
+              <p>Main Type: {submittedArtistData.mainType}</p>
+              {/* Afficher d'autres données de l'artiste ici */}
+            </div>
+          )}
         </section>
       </main>
     </>
