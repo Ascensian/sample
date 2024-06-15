@@ -2,12 +2,9 @@
 
 pragma solidity ^0.8.20;
 
-import "./sampleNFT.sol";
+import "./SampleNFTArtist.sol";
 
 contract SampleMarketplace {
-    event SampleUploaded(uint256 indexed sampleId, address indexed artist, string rights, uint256 price);
-    event SamplePurchased(uint256 indexed sampleId, address indexed owner, uint256 timestamp);
-
     struct DescriptionPreimage {
         bool has_preimage;
         bytes32 preimage;
@@ -62,31 +59,4 @@ contract SampleMarketplace {
     }
 
     SampleNFT public sampleNFT;
-    mapping(uint256 => SampleMusic) public sampleIdToSample;
-    mapping(uint256 => Purchase[]) public sampleIdToPurchaseRecords;
-    uint256 public nextSampleId;
-
-    constructor(address _sampleNftAddress) {
-        sampleNFT = SampleNFT(_sampleNftAddress);
-        nextSampleId = 0;
-    }
-
-    function uploadSample(string memory _uri, string memory _rights, uint256 _price) external {
-        sampleIdToSample[nextSampleId] = SampleMusic(nextSampleId, msg.sender, _uri, _rights, _price);
-        emit SampleUploaded(nextSampleId, msg.sender, _rights, _price);
-        nextSampleId++;
-    }
-
-    function purchaseSample(uint256 _sampleId) external payable {
-        Sample memory sample = musicIdToMusic[_sampleId];
-        require(msg.value == sample.price, "Incorrect payment amount");
-        require(sample.artist != address(0), "Sample does not exist");
-
-        payable(sample.artist).transfer(msg.value);
-        purchaseRecords[_sampleId].push(Purchase(msg.sender, block.timestamp));
-        emit MusicPurchased(_sampleId, msg.sender, block.timestamp);
-
-        // Optionally mint an NFT for the owner
-        sampleNFT.mintNFT(msg.sender, sample.uri);
-    }
 }

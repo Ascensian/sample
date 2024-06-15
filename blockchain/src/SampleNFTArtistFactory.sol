@@ -2,9 +2,11 @@
 
 pragma solidity ^0.8.20;
 
-contract SampleNFTFactory {
+import "./SampleNFTArtist.sol";
+import "./Sample.sol";
+
+contract SampleNFTArtistFactory is Sample {
     mapping(address => bool) public deployedNFTs;
-    mapping(address => address) public ownerToNFT;
 
     modifier onlyNotDeployedNFT() {
         require(!deployedNFTs[msg.sender], "NFT already deployed");
@@ -12,7 +14,7 @@ contract SampleNFTFactory {
     }
 
     function createNFT(string memory _name, string memory _symbol) public onlyNotDeployedNFT {
-        ownerToNFT[msg.sender] = address(new SampleNFT(_name, _symbol));
-        deployedNFTs[newNFT] = true;
+        Sample.setAddressSmToArtist(address(new SampleNFTArtist(_name, _symbol)));
+        deployedNFTs[msg.sender] = true;
     }
 }
