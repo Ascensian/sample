@@ -1,0 +1,8 @@
+.nav_link {
+  /* Style spécifique pour les liens de navigation */
+  color: var(--first-color-light);
+}
+
+.active {
+  color: var(--white-color);
+}
