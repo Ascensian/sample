@@ -1,12 +1,8 @@
-// src/components/ConnectWalletButton.tsx
-
 import React, { useState } from 'react';
-import { ethers } from 'ethers';
-import { Button, Card } from 'react-bootstrap';
 
 const ConnectWalletButton: React.FC = () => {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
-  const [walletBalance, setWalletBalance] = useState<string>('0');
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
   const connectWallet = async () => {
     try {
@@ -14,45 +10,93 @@ const ConnectWalletButton: React.FC = () => {
         throw new Error('MetaMask not detected');
       }
 
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      const address = accounts[0];
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts',
+      });
 
+      if (accounts.length === 0) {
+        throw new Error('No accounts found');
+      }
+
+      const address = accounts[0];
       setWalletAddress(address);
-      getBalance(address);
     } catch (error) {
       console.error('Error connecting MetaMask:', error);
     }
   };
 
-  const getBalance = async (address: string) => {
-    try {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const balance = await provider.getBalance(address);
-      const formattedBalance = ethers.utils.formatEther(balance);
-      setWalletBalance(formattedBalance);
-    } catch (error) {
-      console.error('Error fetching balance:', error);
-    }
+  const disconnectWallet = () => {
+    setWalletAddress(null);
+  };
+
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
   };
 
   return (
-    <Card className="text-center">
-      <Card.Header>
-        <strong>Address: </strong>
-        {walletAddress || 'Not connected'}
-      </Card.Header>
-      <Card.Body>
-        <Card.Text>
-          <strong>Balance: </strong>
-          {walletBalance} ETH
-        </Card.Text>
-        {!walletAddress && (
-          <Button onClick={connectWallet} variant="primary">
-            Connect Wallet
-          </Button>
-        )}
-      </Card.Body>
-    </Card>
+    <div>
+      {walletAddress ? (
+        <div style={{ position: 'relative', display: 'inline-block' }}>
+          <div
+            style={{
+              backgroundColor: 'white',
+              color: '#6F00FF',
+              padding: '10px 20px',
+              borderRadius: '10px',
+              border: 'none',
+              fontSize: '16px',
+              cursor: 'pointer',
+            }}
+            onClick={toggleDropdown}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') toggleDropdown();
+            }}
+            tabIndex={0} // Make the div focusable
+            role="button" // Indicate the div acts as a button
+            aria-pressed={showDropdown}
+          >
+            {walletAddress}
+          </div>
+          {showDropdown && (
+            <div
+              style={{
+                position: 'absolute',
+                fontWeight: 'bold',
+                marginTop: '10px',
+                top: '100%',
+                right: 0,
+                backgroundColor: 'white',
+                color: '#6F00FF',
+                padding: '10px',
+                borderRadius: '10px',
+                border: 'none',
+                cursor: 'pointer',
+                zIndex: 1000,
+              }}
+              onClick={disconnectWallet}
+            >
+              Logout
+            </div>
+          )}
+        </div>
+      ) : (
+        <button
+          style={{
+            backgroundColor: 'white',
+            color: '#6F00FF',
+            padding: '10px 20px',
+            borderRadius: '10px',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '16px',
+            fontWeight: 'bold',
+          }}
+          onClick={connectWallet}
+        >
+          Connect Wallet
+        </button>
+      )}
+    </div>
   );
 };
 
