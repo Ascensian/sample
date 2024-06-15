@@ -38,7 +38,7 @@ contract Sample {
         ArtistType main_type;
         ArtistType[] extra_types;
         bytes[] genres;
-        DescriptionPreimage description;
+        //DescriptionPreimage description;
         bytes32[] assets;
     }
 
@@ -73,7 +73,7 @@ contract Sample {
         ArtistType _mainType,
         ArtistType[] memory _extraTypes,
         bytes[] memory _genres,
-        DescriptionPreimage memory _description,
+        //DescriptionPreimage memory _description,
         bytes32[] memory _assets
     ) external onlyNotRegister {
         setAddressToArtist(
@@ -86,7 +86,7 @@ contract Sample {
                     main_type: _mainType,
                     extra_types: _extraTypes,
                     genres: _genres,
-                    description: _description,
+                    //description: _description,
                     assets: _assets
                 })
             })
