@@ -3,6 +3,16 @@
 pragma solidity ^0.8.20;
 
 contract Sample {
+    event ArtistRegistered(address indexed artist, string mainName, uint32 registeredAt);
+
+    struct SampleMusic {
+        address idSample;
+        Artist artist;
+        string uri;
+        Totalsupplies totalsupplies;
+        uint256 price;
+    }
+
     struct DescriptionPreimage {
         bool has_preimage;
         bytes32 preimage;
@@ -28,7 +38,7 @@ contract Sample {
         ArtistType main_type;
         ArtistType[] extra_types;
         bytes[] genres;
-        DescriptionPreimage description;
+        //DescriptionPreimage description;
         bytes32[] assets;
     }
 
@@ -37,16 +47,25 @@ contract Sample {
         ArtistData data;
     }
 
-    mapping(address => Artist) public artists;
+    struct Totalsupplies {
+        uint256 totalSupply;
+        uint256 totalSold;
+    }
+
+    mapping(address => Artist) public addressToArtist;
+    mapping(address => SampleMusic[]) public addressToSampleMusicTab;
+    mapping(address => address) public ownerToNFT;
+    mapping(address => mapping(uint256 => uint256)) public addressToTokenIdToPrice;
 
     modifier onlyNotRegister() {
-        require(artists[msg.sender].data.registered_at != 0, "You are already register");
+        require(addressToArtist[msg.sender].data.registered_at != 0, "You are already register");
         _;
     }
 
-    /*modifier onlyNotEmpty(string memory _mainName, ArtistType _main_type, bytes[] memory _genres) {
-        require
-    }*/
+    modifier onlyNotSmRegister() {
+        require(ownerToNFT[msg.sender] != address(0), "You are already registed a smart contract");
+        _;
+    }
 
     function registerArtists(
         bool _isArtist,
@@ -54,18 +73,40 @@ contract Sample {
         ArtistType _mainType,
         ArtistType[] memory _extraTypes,
         bytes[] memory _genres,
-        DescriptionPreimage memory _description,
+        //DescriptionPreimage memory _description,
         bytes32[] memory _assets
     ) external onlyNotRegister {
-        artists[msg.sender] = Artist(
-            _isArtist,
-            ArtistData(
-                msg.sender, uint32(block.timestamp), _mainName, _mainType, _extraTypes, _genres, _description, _assets
-            )
+        setAddressToArtist(
+            Artist({
+                is_artist: _isArtist,
+                data: ArtistData({
+                    owner: msg.sender,
+                    registered_at: uint32(block.timestamp),
+                    main_name: _mainName,
+                    main_type: _mainType,
+                    extra_types: _extraTypes,
+                    genres: _genres,
+                    //description: _description,
+                    assets: _assets
+                })
+            })
         );
+        emit ArtistRegistered(msg.sender, _mainName, addressToArtist[msg.sender].data.registered_at);
+    }
+
+    function setPriceToArtist(address _artist, uint256 _tokenId, uint256 _price) public {
+        addressToTokenIdToPrice[_artist][_tokenId] = _price;
+    }
+
+    function setAddressToArtist(Artist memory _artist) public {
+        addressToArtist[msg.sender] = _artist;
+    }
+
+    function setAddressSmToArtist(address _smSample) public onlyNotSmRegister {
+        ownerToNFT[msg.sender] = _smSample;
     }
 
     function getArtitst(address _artist) external view returns (Artist memory) {
-        return artists[_artist];
+        return addressToArtist[_artist];
     }
 }
