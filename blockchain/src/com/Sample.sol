@@ -5,6 +5,8 @@ pragma solidity ^0.8.20;
 contract Sample {
     event ArtistRegistered(address indexed artist, string mainName, uint32 registeredAt);
 
+    error SampleAlreadyRegister(string name);
+
     struct SampleMusic {
         address idSample;
         Artist artist;
@@ -12,7 +14,7 @@ contract Sample {
         Totalsupplies totalsupplies;
         uint256 price;
     }
-
+ 
     struct DescriptionPreimage {
         bool has_preimage;
         bytes32 preimage;
@@ -58,13 +60,19 @@ contract Sample {
     mapping(address => mapping(uint256 => uint256)) public addressToTokenIdToPrice;
 
     modifier onlyNotRegister() {
-        require(addressToArtist[msg.sender].data.registered_at != 0, "You are already register");
+        _requireNotRegister();
         _;
     }
 
     modifier onlyNotSmRegister() {
         require(ownerToNFT[msg.sender] != address(0), "You are already registed a smart contract");
         _;
+    }
+
+    function _requireNotRegister() internal view {
+        if (addressToArtist[msg.sender].data.registered_at != 0) {
+            revert SampleAlreadyRegister(addressToArtist[msg.sender].data.main_name);
+        }
     }
 
     function registerArtists(
@@ -93,7 +101,7 @@ contract Sample {
         );
         emit ArtistRegistered(msg.sender, _mainName, addressToArtist[msg.sender].data.registered_at);
     }
-
+ 
     function setPriceToArtist(address _artist, uint256 _tokenId, uint256 _price) public {
         addressToTokenIdToPrice[_artist][_tokenId] = _price;
     }
