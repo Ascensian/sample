@@ -1,9 +1,8 @@
 // src/components/Header.tsx
 
 import React from 'react';
-import styles from '../styles/Header.module.css'; // Importer le fichier CSS
+import styles from '../styles/header.module.css';
 import ConnectWalletButton from './ConnectWalletButton';
-import ProfileButton from './ProfileButton';
 
 const Header: React.FC = () => {
   return (
@@ -17,7 +16,6 @@ const Header: React.FC = () => {
         </div>
       </div>
       <ConnectWalletButton />
-
     </header>
   );
 };

@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import { ethers } from 'ethers';
-import { Button } from 'react-bootstrap';
-import ProfileButton from './ProfileButton';
+import { Button, Card } from 'react-bootstrap';
 
 const ConnectWalletButton: React.FC = () => {
-  const [walletConnected, setWalletConnected] = useState(false);
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [walletBalance, setWalletBalance] = useState<string>('0');
 
   const connectWallet = async () => {
     try {
@@ -17,22 +17,42 @@ const ConnectWalletButton: React.FC = () => {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       const address = accounts[0];
 
-      setWalletConnected(true);
+      setWalletAddress(address);
+      getBalance(address);
     } catch (error) {
       console.error('Error connecting MetaMask:', error);
     }
   };
 
+  const getBalance = async (address: string) => {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const balance = await provider.getBalance(address);
+      const formattedBalance = ethers.utils.formatEther(balance);
+      setWalletBalance(formattedBalance);
+    } catch (error) {
+      console.error('Error fetching balance:', error);
+    }
+  };
+
   return (
-    <div>
-      {!walletConnected ? (
-        <Button onClick={connectWallet} variant="primary">
-          Connect Wallet
-        </Button>
-      ) : (
-        <ProfileButton />
-      )}
-    </div>
+    <Card className="text-center">
+      <Card.Header>
+        <strong>Address: </strong>
+        {walletAddress || 'Not connected'}
+      </Card.Header>
+      <Card.Body>
+        <Card.Text>
+          <strong>Balance: </strong>
+          {walletBalance} ETH
+        </Card.Text>
+        {!walletAddress && (
+          <Button onClick={connectWallet} variant="primary">
+            Connect Wallet
+          </Button>
+        )}
+      </Card.Body>
+    </Card>
   );
 };
 
