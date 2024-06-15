@@ -1,441 +1,452 @@
-{"abi": [
-  {
-      "anonymous": false,
-      "inputs": [
-          {
-              "indexed": true,
-              "internalType": "address",
-              "name": "artist",
-              "type": "address"
-          },
-          {
-              "indexed": false,
-              "internalType": "string",
-              "name": "mainName",
-              "type": "string"
-          },
-          {
-              "indexed": false,
-              "internalType": "uint32",
-              "name": "registeredAt",
-              "type": "uint32"
-          }
-      ],
-      "name": "ArtistRegistered",
-      "type": "event"
-  },
-  {
-      "inputs": [
-          {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-          }
-      ],
-      "name": "addressToArtist",
-      "outputs": [
-          {
-              "internalType": "bool",
-              "name": "is_artist",
-              "type": "bool"
-          },
-          {
-              "components": [
-                  {
-                      "internalType": "address",
-                      "name": "owner",
-                      "type": "address"
-                  },
-                  {
-                      "internalType": "uint32",
-                      "name": "registered_at",
-                      "type": "uint32"
-                  },
-                  {
-                      "internalType": "string",
-                      "name": "main_name",
-                      "type": "string"
-                  },
-                  {
-                      "internalType": "enum Sample.ArtistType",
-                      "name": "main_type",
-                      "type": "uint8"
-                  },
-                  {
-                      "internalType": "enum Sample.ArtistType[]",
-                      "name": "extra_types",
-                      "type": "uint8[]"
-                  },
-                  {
-                      "internalType": "bytes[]",
-                      "name": "genres",
-                      "type": "bytes[]"
-                  },
-                  {
-                      "internalType": "bytes32[]",
-                      "name": "assets",
-                      "type": "bytes32[]"
-                  }
-              ],
-              "internalType": "struct Sample.ArtistData",
-              "name": "data",
-              "type": "tuple"
-          }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-  },
-  {
-      "inputs": [
-          {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-          },
-          {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-          }
-      ],
-      "name": "addressToSampleMusicTab",
-      "outputs": [
-          {
-              "internalType": "address",
-              "name": "idSample",
-              "type": "address"
-          },
-          {
-              "components": [
-                  {
-                      "internalType": "bool",
-                      "name": "is_artist",
-                      "type": "bool"
-                  },
-                  {
-                      "components": [
-                          {
-                              "internalType": "address",
-                              "name": "owner",
-                              "type": "address"
-                          },
-                          {
-                              "internalType": "uint32",
-                              "name": "registered_at",
-                              "type": "uint32"
-                          },
-                          {
-                              "internalType": "string",
-                              "name": "main_name",
-                              "type": "string"
-                          },
-                          {
-                              "internalType": "enum Sample.ArtistType",
-                              "name": "main_type",
-                              "type": "uint8"
-                          },
-                          {
-                              "internalType": "enum Sample.ArtistType[]",
-                              "name": "extra_types",
-                              "type": "uint8[]"
-                          },
-                          {
-                              "internalType": "bytes[]",
-                              "name": "genres",
-                              "type": "bytes[]"
-                          },
-                          {
-                              "internalType": "bytes32[]",
-                              "name": "assets",
-                              "type": "bytes32[]"
-                          }
-                      ],
-                      "internalType": "struct Sample.ArtistData",
-                      "name": "data",
-                      "type": "tuple"
-                  }
-              ],
-              "internalType": "struct Sample.Artist",
-              "name": "artist",
-              "type": "tuple"
-          },
-          {
-              "internalType": "string",
-              "name": "uri",
-              "type": "string"
-          },
-          {
-              "components": [
-                  {
-                      "internalType": "uint256",
-                      "name": "totalSupply",
-                      "type": "uint256"
-                  },
-                  {
-                      "internalType": "uint256",
-                      "name": "totalSold",
-                      "type": "uint256"
-                  }
-              ],
-              "internalType": "struct Sample.Totalsupplies",
-              "name": "totalsupplies",
-              "type": "tuple"
-          },
-          {
-              "internalType": "uint256",
-              "name": "price",
-              "type": "uint256"
-          }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-  },
-  {
-      "inputs": [
-          {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-          },
-          {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-          }
-      ],
-      "name": "addressToTokenIdToPrice",
-      "outputs": [
-          {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-          }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-  },
-  {
-      "inputs": [
-          {
-              "internalType": "address",
-              "name": "_artist",
-              "type": "address"
-          }
-      ],
-      "name": "getArtitst",
-      "outputs": [
-          {
-              "components": [
-                  {
-                      "internalType": "bool",
-                      "name": "is_artist",
-                      "type": "bool"
-                  },
-                  {
-                      "components": [
-                          {
-                              "internalType": "address",
-                              "name": "owner",
-                              "type": "address"
-                          },
-                          {
-                              "internalType": "uint32",
-                              "name": "registered_at",
-                              "type": "uint32"
-                          },
-                          {
-                              "internalType": "string",
-                              "name": "main_name",
-                              "type": "string"
-                          },
-                          {
-                              "internalType": "enum Sample.ArtistType",
-                              "name": "main_type",
-                              "type": "uint8"
-                          },
-                          {
-                              "internalType": "enum Sample.ArtistType[]",
-                              "name": "extra_types",
-                              "type": "uint8[]"
-                          },
-                          {
-                              "internalType": "bytes[]",
-                              "name": "genres",
-                              "type": "bytes[]"
-                          },
-                          {
-                              "internalType": "bytes32[]",
-                              "name": "assets",
-                              "type": "bytes32[]"
-                          }
-                      ],
-                      "internalType": "struct Sample.ArtistData",
-                      "name": "data",
-                      "type": "tuple"
-                  }
-              ],
-              "internalType": "struct Sample.Artist",
-              "name": "",
-              "type": "tuple"
-          }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-  },
-  {
-      "inputs": [
-          {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-          }
-      ],
-      "name": "ownerToNFT",
-      "outputs": [
-          {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-          }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-  },
-  {
-      "inputs": [
-          {
-              "internalType": "bool",
-              "name": "_isArtist",
-              "type": "bool"
-          },
-          {
-              "internalType": "string",
-              "name": "_mainName",
-              "type": "string"
-          },
-          {
-              "internalType": "enum Sample.ArtistType",
-              "name": "_mainType",
-              "type": "uint8"
-          },
-          {
-              "internalType": "enum Sample.ArtistType[]",
-              "name": "_extraTypes",
-              "type": "uint8[]"
-          },
-          {
-              "internalType": "bytes[]",
-              "name": "_genres",
-              "type": "bytes[]"
-          },
-          {
-              "internalType": "bytes32[]",
-              "name": "_assets",
-              "type": "bytes32[]"
-          }
-      ],
-      "name": "registerArtists",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-  },
-  {
-      "inputs": [
-          {
-              "internalType": "address",
-              "name": "_smSample",
-              "type": "address"
-          }
-      ],
-      "name": "setAddressSmToArtist",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-  },
-  {
-      "inputs": [
-          {
-              "components": [
-                  {
-                      "internalType": "bool",
-                      "name": "is_artist",
-                      "type": "bool"
-                  },
-                  {
-                      "components": [
-                          {
-                              "internalType": "address",
-                              "name": "owner",
-                              "type": "address"
-                          },
-                          {
-                              "internalType": "uint32",
-                              "name": "registered_at",
-                              "type": "uint32"
-                          },
-                          {
-                              "internalType": "string",
-                              "name": "main_name",
-                              "type": "string"
-                          },
-                          {
-                              "internalType": "enum Sample.ArtistType",
-                              "name": "main_type",
-                              "type": "uint8"
-                          },
-                          {
-                              "internalType": "enum Sample.ArtistType[]",
-                              "name": "extra_types",
-                              "type": "uint8[]"
-                          },
-                          {
-                              "internalType": "bytes[]",
-                              "name": "genres",
-                              "type": "bytes[]"
-                          },
-                          {
-                              "internalType": "bytes32[]",
-                              "name": "assets",
-                              "type": "bytes32[]"
-                          }
-                      ],
-                      "internalType": "struct Sample.ArtistData",
-                      "name": "data",
-                      "type": "tuple"
-                  }
-              ],
-              "internalType": "struct Sample.Artist",
-              "name": "_artist",
-              "type": "tuple"
-          }
-      ],
-      "name": "setAddressToArtist",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-  },
-  {
-      "inputs": [
-          {
-              "internalType": "address",
-              "name": "_artist",
-              "type": "address"
-          },
-          {
-              "internalType": "uint256",
-              "name": "_tokenId",
-              "type": "uint256"
-          },
-          {
-              "internalType": "uint256",
-              "name": "_price",
-              "type": "uint256"
-          }
-      ],
-      "name": "setPriceToArtist",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-  }
+{"abi":[
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+            }
+        ],
+        "name": "SampleAlreadyRegister",
+        "type": "error"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "artist",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "mainName",
+                "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint32",
+                "name": "registeredAt",
+                "type": "uint32"
+            }
+        ],
+        "name": "ArtistRegistered",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "addressToArtist",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "is_artist",
+                "type": "bool"
+            },
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint32",
+                        "name": "registered_at",
+                        "type": "uint32"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "main_name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "enum Sample.ArtistType",
+                        "name": "main_type",
+                        "type": "uint8"
+                    },
+                    {
+                        "internalType": "enum Sample.ArtistType[]",
+                        "name": "extra_types",
+                        "type": "uint8[]"
+                    },
+                    {
+                        "internalType": "bytes[]",
+                        "name": "genres",
+                        "type": "bytes[]"
+                    },
+                    {
+                        "internalType": "bytes32[]",
+                        "name": "assets",
+                        "type": "bytes32[]"
+                    }
+                ],
+                "internalType": "struct Sample.ArtistData",
+                "name": "data",
+                "type": "tuple"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "addressToSampleMusicTab",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "idSample",
+                "type": "address"
+            },
+            {
+                "components": [
+                    {
+                        "internalType": "bool",
+                        "name": "is_artist",
+                        "type": "bool"
+                    },
+                    {
+                        "components": [
+                            {
+                                "internalType": "address",
+                                "name": "owner",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint32",
+                                "name": "registered_at",
+                                "type": "uint32"
+                            },
+                            {
+                                "internalType": "string",
+                                "name": "main_name",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "enum Sample.ArtistType",
+                                "name": "main_type",
+                                "type": "uint8"
+                            },
+                            {
+                                "internalType": "enum Sample.ArtistType[]",
+                                "name": "extra_types",
+                                "type": "uint8[]"
+                            },
+                            {
+                                "internalType": "bytes[]",
+                                "name": "genres",
+                                "type": "bytes[]"
+                            },
+                            {
+                                "internalType": "bytes32[]",
+                                "name": "assets",
+                                "type": "bytes32[]"
+                            }
+                        ],
+                        "internalType": "struct Sample.ArtistData",
+                        "name": "data",
+                        "type": "tuple"
+                    }
+                ],
+                "internalType": "struct Sample.Artist",
+                "name": "artist",
+                "type": "tuple"
+            },
+            {
+                "internalType": "string",
+                "name": "uri",
+                "type": "string"
+            },
+            {
+                "components": [
+                    {
+                        "internalType": "uint256",
+                        "name": "totalSupply",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "totalSold",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct Sample.Totalsupplies",
+                "name": "totalsupplies",
+                "type": "tuple"
+            },
+            {
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "addressToTokenIdToPrice",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_artist",
+                "type": "address"
+            }
+        ],
+        "name": "getArtitst",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "bool",
+                        "name": "is_artist",
+                        "type": "bool"
+                    },
+                    {
+                        "components": [
+                            {
+                                "internalType": "address",
+                                "name": "owner",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint32",
+                                "name": "registered_at",
+                                "type": "uint32"
+                            },
+                            {
+                                "internalType": "string",
+                                "name": "main_name",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "enum Sample.ArtistType",
+                                "name": "main_type",
+                                "type": "uint8"
+                            },
+                            {
+                                "internalType": "enum Sample.ArtistType[]",
+                                "name": "extra_types",
+                                "type": "uint8[]"
+                            },
+                            {
+                                "internalType": "bytes[]",
+                                "name": "genres",
+                                "type": "bytes[]"
+                            },
+                            {
+                                "internalType": "bytes32[]",
+                                "name": "assets",
+                                "type": "bytes32[]"
+                            }
+                        ],
+                        "internalType": "struct Sample.ArtistData",
+                        "name": "data",
+                        "type": "tuple"
+                    }
+                ],
+                "internalType": "struct Sample.Artist",
+                "name": "",
+                "type": "tuple"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "ownerToNFT",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bool",
+                "name": "_isArtist",
+                "type": "bool"
+            },
+            {
+                "internalType": "string",
+                "name": "_mainName",
+                "type": "string"
+            },
+            {
+                "internalType": "enum Sample.ArtistType",
+                "name": "_mainType",
+                "type": "uint8"
+            },
+            {
+                "internalType": "enum Sample.ArtistType[]",
+                "name": "_extraTypes",
+                "type": "uint8[]"
+            },
+            {
+                "internalType": "bytes[]",
+                "name": "_genres",
+                "type": "bytes[]"
+            },
+            {
+                "internalType": "bytes32[]",
+                "name": "_assets",
+                "type": "bytes32[]"
+            }
+        ],
+        "name": "registerArtists",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_smSample",
+                "type": "address"
+            }
+        ],
+        "name": "setAddressSmToArtist",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "bool",
+                        "name": "is_artist",
+                        "type": "bool"
+                    },
+                    {
+                        "components": [
+                            {
+                                "internalType": "address",
+                                "name": "owner",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint32",
+                                "name": "registered_at",
+                                "type": "uint32"
+                            },
+                            {
+                                "internalType": "string",
+                                "name": "main_name",
+                                "type": "string"
+                            },
+                            {
+                                "internalType": "enum Sample.ArtistType",
+                                "name": "main_type",
+                                "type": "uint8"
+                            },
+                            {
+                                "internalType": "enum Sample.ArtistType[]",
+                                "name": "extra_types",
+                                "type": "uint8[]"
+                            },
+                            {
+                                "internalType": "bytes[]",
+                                "name": "genres",
+                                "type": "bytes[]"
+                            },
+                            {
+                                "internalType": "bytes32[]",
+                                "name": "assets",
+                                "type": "bytes32[]"
+                            }
+                        ],
+                        "internalType": "struct Sample.ArtistData",
+                        "name": "data",
+                        "type": "tuple"
+                    }
+                ],
+                "internalType": "struct Sample.Artist",
+                "name": "_artist",
+                "type": "tuple"
+            }
+        ],
+        "name": "setAddressToArtist",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_artist",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_tokenId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_price",
+                "type": "uint256"
+            }
+        ],
+        "name": "setPriceToArtist",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    }
 ]
 }
