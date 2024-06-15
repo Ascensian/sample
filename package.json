@@ -9,12 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/web3": "^1.2.2",
+    "bootstrap": "^5.3.3",
+    "ethers": "^6.13.0",
     "next": "14.2.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-bootstrap": "^2.10.2",
+    "react-dom": "^18",
+    "web3": "^4.9.0"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^20.14.2",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@typescript-eslint/eslint-plugin": "^7.13.0",
