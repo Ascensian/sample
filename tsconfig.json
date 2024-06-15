@@ -2,6 +2,7 @@
   "compileOnSave": true,
   "compilerOptions": {
     "module": "CommonJS",
+    "moduleResolution": "Node",
     "target": "ES5",
     "noEmitOnError": true,
     "strict": true,
