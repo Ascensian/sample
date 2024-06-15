@@ -7,8 +7,8 @@ export const uploadToS3 = async (file: any, bucketName: string) => {
     try {
         const s3 = new AWS.S3({
             credentials: {
-                accessKeyId: 'AKIAZQ3DOLOUUD4H2XDW' || '',
-                secretAccessKey: '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' || '',
+                accessKeyId: '' || '',
+                secretAccessKey: '' || '',
             }
 
         })
