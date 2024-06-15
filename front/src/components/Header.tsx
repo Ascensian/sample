@@ -2,6 +2,7 @@
 
 import React from 'react';
 import styles from '../styles/header.module.css';
+import ConnectWalletButton from './ConnectWalletButton';
 
 const Header: React.FC = () => {
   return (
@@ -18,9 +19,7 @@ const Header: React.FC = () => {
           <input type="text" placeholder="Rechercher..." />
         </div>
       </div>
-      <div className={styles['right-content']}>
-        <button className={styles['connect-wallet']}>Connect Wallet</button>
-      </div>
+      <ConnectWalletButton />
     </header>
   );
 };
