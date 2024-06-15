@@ -1,11 +1,14 @@
 import React from 'react';
-import MainLayout from '../layouts/MainLayout';
+import Layout from '../layouts/Layout';
+import TitleSection from '../components/TitleSection';
+import DiscoverSection from '../components/DiscoverSection';
 
 const HomePage: React.FC = () => {
   return (
-    <MainLayout>
-      <h1>Welcome to the Dashboard</h1>
-    </MainLayout>
+    <Layout>
+      <TitleSection />
+      <DiscoverSection />
+    </Layout>
   );
 };
 

@@ -1,13 +1,17 @@
 // src/components/Header.tsx
 
 import React from 'react';
-import styles from '../styles/header.module.css'; // Importer le fichier CSS
+import styles from '../styles/header.module.css';
 
 const Header: React.FC = () => {
   return (
     <header className={styles.header}>
       <button className={styles['back-button']}>
-        <img src="/icon/retour.svg" alt="Back" className={styles['back-icon']} />
+        <img
+          src="/icon/retour.svg"
+          alt="Back"
+          className={styles['back-icon']}
+        />
       </button>
       <div className={styles['center-content']}>
         <div className={styles.search}>
@@ -22,4 +26,3 @@ const Header: React.FC = () => {
 };
 
 export default Header;
-

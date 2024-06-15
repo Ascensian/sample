@@ -9,14 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "autoprefixer": "^10.4.19",
+    "flowbite-react": "^0.9.0",
+    "howler": "^2.2.4",
     "next": "14.2.4",
-    "react": "^18",
-    "react-dom": "^18"
+    "postcss-nested": "^6.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.2.1",
+    "react-multi-carousel": "^2.8.5"
   },
   "devDependencies": {
+    "@types/howler": "^2.2.11",
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.13.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.4",
@@ -29,6 +36,6 @@
     "postcss": "^8",
     "prettier": "^3.3.2",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5.4.5"
   }
 }

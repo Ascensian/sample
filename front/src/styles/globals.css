@@ -2,7 +2,7 @@
 
 :root {
   --header-height: 3rem;
-  --nav-width: 200px; /* Adjusted width */
+  --nav-width: 250px; /* Adjusted width */
   --first-color: #1E1E1E;
   --first-color-light: #FFFFFF;
   --white-color: #9747FF;
@@ -17,13 +17,29 @@
   box-sizing: border-box;
 }
 
+html {
+  height: 100%;
+}
+
+main {
+  margin-top: var(--header-height);
+  height: 100%;
+}
+
 body {
-  position: relative;
-  margin: var(--header-height) 1 0 0;
+  
+  margin: var(--header-height) 0 0 0;
   padding: 0 rem;
+  margin: 0;
   font-family: var(--body-font);
   font-size: var(--normal-font-size);
   transition: 0.5s;
+  height: 100%;
+  background-color: #070707;
+}
+
+#__next {
+  padding-left: 0px;
 }
 
 a {
@@ -61,6 +77,10 @@ a {
   padding: 0.5rem 0.5rem 0.5rem 0.5rem;
 }
 
+.nav_link_container {
+  margin-top: 1rem; 
+}
+
 
 .nav_link {
   position: relative;
@@ -82,7 +102,7 @@ a {
 }
 
 .body_pd {
-  padding-left: calc(var(--nav-width) + 1rem);
+  padding-left: 0px;
 }
 
 .active {
@@ -105,7 +125,9 @@ a {
 @media screen and (min-width: 768px) {
   body {
     margin: calc(var(--header-height) + 1rem) 0 0 0;
-    padding-left: calc(var(--nav-width) + 2rem);
+    padding-left: calc(var(--nav-width));
+  
+    background-color: #070707;
   }
 
 
