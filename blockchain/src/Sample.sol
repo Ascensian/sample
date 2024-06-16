@@ -6,16 +6,24 @@ contract Sample {
     event ArtistRegistered(address indexed artist, string mainName, uint32 registeredAt);
 
     error SampleAlreadyRegister(string);
-	error SampleNoEmptyField(string);
+    error SampleNoEmptyField(string);
+    error SampleInvalidIndex(uint256);
+    error SampleSameAmount(uint256);
+
+    struct SampleDetails {
+        address owner;
+        bool isUsed;
+    }
 
     struct SampleMusic {
-        address idSample;
+        uint256 idSample;
         Artist artist;
         string uri;
-        Totalsupplies totalsupplies;
+        // SampleDetails[] sampleDetails;
+        Totalsupplies totalSupplies;
         uint256 price;
     }
- 
+
     struct DescriptionPreimage {
         bool has_preimage;
         bytes32 preimage;
@@ -59,8 +67,10 @@ contract Sample {
     mapping(address => SampleMusic[]) public addressToSampleMusicTab;
     mapping(address => address) public ownerToNFT;
     mapping(address => mapping(uint256 => uint256)) public addressToTokenIdToPrice;
+    mapping(address => mapping(uint256 => SampleDetails[])) public addressToSampleDetails;
+    mapping(address => uint256) public balanceOf;
 
-	modifier onlyNotRegister() {
+    modifier onlyNotRegister() {
         _requireNotRegister();
         _;
     }
@@ -71,16 +81,38 @@ contract Sample {
         }
     }
 
-	modifier onlyNotEmptyName(string memory _mainName) {
-		_requireNoEmptyName(_mainName);
-		_;
-	}
+    modifier onlyNotEmptyName(string memory _mainName) {
+        _requireNoEmptyName(_mainName);
+        _;
+    }
 
-	function _requireNoEmptyName(string memory _mainName) internal pure {
-		if (bytes(_mainName).length == 0) {
-			revert SampleNoEmptyField("main_name");
-		}
-	}
+    function _requireNoEmptyName(string memory _mainName) internal pure {
+        if (bytes(_mainName).length == 0) {
+            revert SampleNoEmptyField("main_name");
+        }
+    }
+
+    modifier onlyValidIndex(uint256 _index) {
+        _requireValidIndex(_index);
+        _;
+    }
+
+    function _requireValidIndex(uint256 _index) internal view {
+        if (_index > addressToSampleMusicTab[msg.sender].length - 1) {
+            revert SampleInvalidIndex(_index);
+        }
+    }
+
+    modifier onlySameAmount(uint256 _index) {
+        _requireSameAmount(_index);
+        _;
+    }
+
+    function _requireSameAmount(uint256 _index) internal view onlyValidIndex(_index) {
+        if (msg.value < addressToSampleMusicTab[msg.sender][_index].price) {
+            revert SampleSameAmount(msg.value);
+        }
+    }
 
     function registerArtists(
         bool _isArtist,
@@ -108,7 +140,25 @@ contract Sample {
         );
         emit ArtistRegistered(msg.sender, _mainName, addressToArtist[msg.sender].data.registered_at);
     }
- 
+
+    function createSample(address _artist, string memory _uri, uint256 _price) public {
+        addressToSampleMusicTab[_artist].push(
+            SampleMusic({
+                idSample: addressToSampleMusicTab[_artist].length,
+                artist: addressToArtist[_artist],
+                uri: _uri,
+                totalSupplies: Totalsupplies({totalSupply: 0, totalSold: 0}),
+                price: _price
+            })
+        );
+    }
+
+    function buySample(address _artist, uint256 _index) public payable onlyValidIndex(_index) onlySameAmount(_index) {
+        addressToSampleDetails[_artist][_index].push(SampleDetails({owner: msg.sender, isUsed: false}));
+        addressToSampleMusicTab[_artist][_index].totalSupplies.totalSold++;
+        balanceOf[_artist] += msg.value;
+    }
+
     function setPriceToArtist(address _artist, uint256 _tokenId, uint256 _price) public {
         addressToTokenIdToPrice[_artist][_tokenId] = _price;
     }
@@ -121,27 +171,42 @@ contract Sample {
         return addressToArtist[_artist];
     }
 
-	function setArtistIsArtist(address _artist, bool _isArtist) public {
-		addressToArtist[_artist].is_artist = _isArtist;
-	}
+    function setArtistIsArtist(address _artist, bool _isArtist) public {
+        addressToArtist[_artist].is_artist = _isArtist;
+    }
 
-	function setArtistDataMainName(address _artist, string memory _mainName) public onlyNotEmptyName(_mainName) {
-		addressToArtist[_artist].data.main_name = _mainName;
-	}
+    function setArtistDataMainName(address _artist, string memory _mainName) public onlyNotEmptyName(_mainName) {
+        addressToArtist[_artist].data.main_name = _mainName;
+    }
 
-	function setArtistDataMainType(address _artist, ArtistType _mainType) public {
-		addressToArtist[_artist].data.main_type = _mainType;
-	}
+    function setArtistDataMainType(address _artist, ArtistType _mainType) public {
+        addressToArtist[_artist].data.main_type = _mainType;
+    }
 
-	function setArtistDataExtraTypes(address _artist, ArtistType[] memory _extraTypes) public {
-		addressToArtist[_artist].data.extra_types = _extraTypes;
-	}
+    function setArtistDataExtraTypes(address _artist, ArtistType[] memory _extraTypes) public {
+        addressToArtist[_artist].data.extra_types = _extraTypes;
+    }
 
-	function setArtistDataGenres(address _artist, bytes[] memory _genres) public {
-		addressToArtist[_artist].data.genres = _genres;
-	}
+    function setArtistDataGenres(address _artist, bytes[] memory _genres) public {
+        addressToArtist[_artist].data.genres = _genres;
+    }
 
-	function setArtistDataAssets(address _artist, bytes32[] memory _assets) public {
-		addressToArtist[_artist].data.assets = _assets;
-	}
+    function setArtistDataAssets(address _artist, bytes32[] memory _assets) public {
+        addressToArtist[_artist].data.assets = _assets;
+    }
+
+    function setSampleMusicIdSample(address _artist, uint256 _index, uint256 _idSample)
+        internal
+        onlyValidIndex(_index)
+    {
+        addressToSampleMusicTab[_artist][_index].idSample = _idSample;
+    }
+
+    function setSampleMusicUri(address _artist, uint256 _index, string memory _uri) public onlyValidIndex(_index) {
+        addressToSampleMusicTab[_artist][_index].uri = _uri;
+    }
+
+    function setSampleMusicPrice(address _artist, uint256 _index, uint256 _price) public onlyValidIndex(_index) {
+        addressToSampleMusicTab[_artist][_index].price = _price;
+    }
 }
