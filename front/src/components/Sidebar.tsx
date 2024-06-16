@@ -2,7 +2,14 @@ import React, { useEffect } from 'react';
 import styles from '../styles/sidebar.module.css';
 import Image from 'next/image';
 
-import { FaHome, FaSearch, FaBookOpen, FaUpload, FaUser } from 'react-icons/fa';
+import {
+  FaHome,
+  FaSearch,
+  FaBookOpen,
+  FaUpload,
+  FaUser,
+  FaPaintBrush,
+} from 'react-icons/fa';
 
 const Sidebar = () => {
   useEffect(() => {
@@ -73,6 +80,10 @@ const Sidebar = () => {
             <span className="nav_name">Upload a song</span>
           </a>
           <a href="/register" className={`nav_link ${styles.nav_link}`}>
+            <FaPaintBrush className="nav_icon" />
+            <span className="nav_name">Register as Artist</span>
+          </a>
+          <a href="/profil" className={`nav_link ${styles.nav_link}`}>
             <FaUser className="nav_icon" />
             <span className="nav_name">Profil</span>
           </a>

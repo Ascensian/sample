@@ -230,6 +230,7 @@ export default function RegisterArtist(
           const artistData = await contract.getArtitst(artistAddress);
           if (artistData.is_artist) {
             setArtistInfo(artistData.data);
+            console.log('Artiste enregistré:', artistData.data);
           } else {
             console.log("L'artiste n'est pas enregistré.");
           }
@@ -247,14 +248,6 @@ export default function RegisterArtist(
     };
     fetchArtistData();
   }, [artistAddress]);
-
-  if (artistInfo) {
-    return (
-      <div className="text-white">
-        L'artiste n'est pas enregistré ou une erreur s'est produite.
-      </div>
-    );
-  }
 
   return (
     <>
@@ -409,19 +402,6 @@ export default function RegisterArtist(
           >
             Submit
           </Button>
-        </section>
-        <section>
-          {artistRegistered && submittedArtistData && (
-            <section>
-              <div>
-                <h2>Informations de l'Artiste</h2>
-                <p>Nom Principal: {artistInfo.main_name}</p>
-                <p>Type Principal: {ArtistType[artistInfo.main_type]}</p>
-                {/* Afficher d'autres informations de l'artiste comme nécessaire */}
-              </div>
-              <h2 className="text-white">Artist Registration Successful</h2>
-            </section>
-          )}
         </section>
       </main>
     </>
