@@ -33,14 +33,21 @@ enum ArtistType {
 interface Artist {
   isArtist: boolean;
   artistAddress: string;
-  mainName: string;
+  mainName: string; // Ajusté pour correspondre à l'ABI
   mainType: ArtistType;
   extraTypes: ArtistType[];
   genres: string[];
   assets: string[];
 }
 
-export default function RegisterArtist() {
+export default function RegisterArtist(
+  is_artist: boolean,
+  main_name: string,
+  main_type: ArtistType,
+  extra_types: ArtistType[],
+  genres: string[],
+  assets: string[],
+) {
   const [state, setState] = React.useState<{ isArtist: boolean } | null>(null);
 
   const [signer, setSigner] = useState<ethers.JsonRpcSigner | null>(null);
@@ -49,12 +56,13 @@ export default function RegisterArtist() {
   const [mainName, setMainName] = useState<string | null>(null);
   const [mainType, setMainType] = useState<ArtistType | null>(null);
   const [extraTypes, setExtraTypes] = useState<ArtistType[]>([]);
-  const [genres, setGenres] = useState<string[]>([]);
-  const [assets, setAssets] = useState<string[]>([]);
+  const [artistGenres, setArtistGenres] = useState<string[]>([]);
+  const [artistAssets, setArtistAssets] = useState<string[]>([]);
   const [submittedArtistData, setSubmittedArtistData] = useState<Artist | null>(
     null,
   );
   const [artistRegistered, setArtistRegistered] = useState<boolean>(false);
+  const [artistInfo, setArtistInfo] = useState(null);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsArtist(event.target.checked);
@@ -98,29 +106,46 @@ export default function RegisterArtist() {
       artistAddress &&
       mainName &&
       mainType !== null && // Ensure mainType is not null
-      extraTypes.length > 0 && // Ensure extraTypes is not empty
-      assets.length > 0 // Ensure assets is not empty
+      extraTypes && // Ensure extraTypes is not empty
+      artistGenres && // Ensure genres is not empty
+      artistAssets // Ensure assets is not empty
     ) {
       const contract = new ethers.Contract(contractAddress, ABI, signer);
       console.log(contractAddress);
 
       // Correctly encode the data for blockchain
-      const genresAsBytes = genres.map(ethers.encodeBytes32String);
+      const genresAsBytes = artistGenres.map((genre) =>
+        ethers.encodeBytes32String(genre),
+      );
       console.log(genresAsBytes);
-      const assetsAsBytes32 = assets.map(ethers.encodeBytes32String);
+      const assetsAsBytes32 = artistAssets.map((asset) =>
+        ethers.encodeBytes32String(asset),
+      );
       console.log(assetsAsBytes32);
 
       // Correct the function call to match the ABI
       try {
+        console.log({
+          isArtist,
+          mainName,
+          mainType,
+          extraTypes: extraTypes.map((type) => type), // Convert enum to uint8
+          genresAsBytes,
+          assetsAsBytes32,
+        });
+
         const tx = await contract.registerArtists(
           isArtist,
           mainName,
           mainType,
-          extraTypes.map((type) => ArtistType[type]), // Convert enum to uint8
+          extraTypes.map((type) => type), // Convert enum to uint8
           genresAsBytes,
           assetsAsBytes32,
         );
+        console.log('Transaction sent:', tx);
         await tx.wait();
+        console.log('Transaction confirmed:', tx);
+
         setState({ isArtist: true });
 
         setSubmittedArtistData({
@@ -137,6 +162,18 @@ export default function RegisterArtist() {
       } catch (error) {
         console.error('Error registering artist:', error);
       }
+    } else {
+      console.log('data:', {
+        isArtist,
+        contractAddress,
+        signer,
+        artistAddress,
+        mainName,
+        mainType,
+        extraTypes,
+        genres,
+        assets,
+      });
     }
   }, [
     isArtist,
@@ -146,13 +183,23 @@ export default function RegisterArtist() {
     mainName,
     mainType,
     extraTypes,
-    genres,
-    assets,
+    artistGenres,
+    artistAssets,
   ]);
 
   useEffect(() => {
     registerArtist();
   }, [registerArtist]);
+
+  // Function to handle checkbox change for extraTypes
+  const handleExtraTypeChange = (type: ArtistType, checked: boolean) => {
+    if (checked) {
+      setExtraTypes([...extraTypes, type]);
+    } else {
+      const filteredTypes = extraTypes.filter((t) => t !== type);
+      setExtraTypes(filteredTypes);
+    }
+  };
 
   // Listen for the ArtistRegistered event
   useEffect(() => {
@@ -172,6 +219,42 @@ export default function RegisterArtist() {
       });
     }
   }, [signer, artistRegistered, submittedArtistData]);
+
+  useEffect(() => {
+    const fetchArtistData = async () => {
+      if (window.ethereum) {
+        try {
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const contract = new ethers.Contract(contractAddress, ABI, provider);
+          await window.ethereum.request({ method: 'eth_requestAccounts' });
+          const artistData = await contract.getArtitst(artistAddress);
+          if (artistData.is_artist) {
+            setArtistInfo(artistData.data);
+          } else {
+            console.log("L'artiste n'est pas enregistré.");
+          }
+        } catch (error) {
+          console.error(
+            "Erreur lors de la récupération des données de l'artiste:",
+            error,
+          );
+        }
+      } else {
+        console.log(
+          'Veuillez installer MetaMask pour utiliser cette fonctionnalité.',
+        );
+      }
+    };
+    fetchArtistData();
+  }, [artistAddress]);
+
+  if (artistInfo) {
+    return (
+      <div className="text-white">
+        L'artiste n'est pas enregistré ou une erreur s'est produite.
+      </div>
+    );
+  }
 
   return (
     <>
@@ -193,7 +276,7 @@ export default function RegisterArtist() {
                 id="artistAddress"
                 placeholder={artistAddress || 'No address found'}
                 required
-                value="0x8f1951BE5C9A79d7AFdE6F931d28E7C632bC6C9D"
+                value={artistAddress || ''}
                 onChange={(e) => setArtistAddress(e.target.value)}
               />
             </div>
@@ -232,23 +315,20 @@ export default function RegisterArtist() {
             </div>
             <Select
               id="mainType"
-              value={mainType !== null ? mainType : ''}
+              value={mainType !== null ? mainType.toString() : ''}
               required
-              onChange={(e) => setMainType(parseInt(e.target.value))}
+              onChange={(e) =>
+                setMainType(parseInt(e.target.value) as ArtistType)
+              }
               style={{ color: 'black' }}
             >
-              <option value={ArtistType.Singer}>Singer</option>
-              <option value={ArtistType.Instrumentalist}>
-                Instrumentalist
-              </option>
-              <option value={ArtistType.Composer}>Composer</option>
-              <option value={ArtistType.Lyricist}>Lyricist</option>
-              <option value={ArtistType.Producer}>Producer</option>
-              <option value={ArtistType.DiscJokey}>DiscJokey</option>
-              <option value={ArtistType.Conductor}>Conductor</option>
-              <option value={ArtistType.Arranger}>Arranger</option>
-              <option value={ArtistType.Engineer}>Engineer</option>
-              <option value={ArtistType.Director}>Director</option>
+              {Object.keys(ArtistType)
+                .filter((key) => !isNaN(Number(ArtistType[key])))
+                .map((key) => (
+                  <option key={ArtistType[key]} value={ArtistType[key]}>
+                    {key}
+                  </option>
+                ))}
             </Select>
             <div className="block mt-4">
               <Label
@@ -268,24 +348,15 @@ export default function RegisterArtist() {
                     <input
                       type="checkbox"
                       id={`extraType-${type}`}
-                      value={type}
-                      className="text-white"
-                      onChange={(e) => {
-                        const newExtraTypes = [...extraTypes];
-                        if (e.target.checked) {
-                          newExtraTypes.push(
-                            ArtistType[type as keyof typeof ArtistType],
-                          );
-                        } else {
-                          const indexToRemove = newExtraTypes.indexOf(
-                            ArtistType[type as keyof typeof ArtistType],
-                          );
-                          if (indexToRemove > -1) {
-                            newExtraTypes.splice(indexToRemove, 1);
-                          }
-                        }
-                        setExtraTypes(newExtraTypes);
-                      }}
+                      checked={extraTypes.includes(
+                        ArtistType[type as keyof typeof ArtistType],
+                      )}
+                      onChange={(e) =>
+                        handleExtraTypeChange(
+                          ArtistType[type as keyof typeof ArtistType],
+                          e.target.checked,
+                        )
+                      }
                     />
                     <label htmlFor={`extraType-${type}`} className="ml-2">
                       {type}
@@ -303,9 +374,9 @@ export default function RegisterArtist() {
                 id="genres"
                 placeholder="Enter genres, separated by commas"
                 required
-                value={genres.join(', ')}
+                value={artistGenres.join(', ')}
                 onChange={(e) =>
-                  setGenres(
+                  setArtistGenres(
                     e.target.value.split(',').map((genre) => genre.trim()),
                   )
                 }
@@ -321,9 +392,9 @@ export default function RegisterArtist() {
                 id="assets"
                 placeholder="Enter assets, separated by commas"
                 required
-                value={assets.join(', ')}
+                value={artistAssets.join(', ')}
                 onChange={(e) =>
-                  setAssets(
+                  setArtistAssets(
                     e.target.value.split(',').map((asset) => asset.trim()),
                   )
                 }
@@ -342,26 +413,13 @@ export default function RegisterArtist() {
         <section>
           {artistRegistered && submittedArtistData && (
             <section>
-              <h2>Artist Registration Successful</h2>
-              <p>
-                <strong>Name:</strong> {submittedArtistData.mainName}
-              </p>
-              <p>
-                <strong>Type:</strong>{' '}
-                {ArtistType[submittedArtistData.mainType]}
-              </p>
-              <p>
-                <strong>Extra Types:</strong>{' '}
-                {submittedArtistData.extraTypes
-                  .map((type) => ArtistType[type])
-                  .join(', ')}
-              </p>
-              <p>
-                <strong>Genres:</strong> {submittedArtistData.genres.join(', ')}
-              </p>
-              <p>
-                <strong>Assets:</strong> {submittedArtistData.assets.join(', ')}
-              </p>
+              <div>
+                <h2>Informations de l'Artiste</h2>
+                <p>Nom Principal: {artistInfo.main_name}</p>
+                <p>Type Principal: {ArtistType[artistInfo.main_type]}</p>
+                {/* Afficher d'autres informations de l'artiste comme nécessaire */}
+              </div>
+              <h2 className="text-white">Artist Registration Successful</h2>
             </section>
           )}
         </section>
