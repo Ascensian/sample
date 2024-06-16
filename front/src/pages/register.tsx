@@ -68,6 +68,27 @@ export default function RegisterArtist(
     setIsArtist(event.target.checked);
   };
 
+  useEffect(() => {
+    const getSignerAndAddress = async () => {
+      if (window.ethereum) {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        try {
+          await provider.send('eth_requestAccounts', []); // Demande à MetaMask l'autorisation de se connecter
+          const signer = provider.getSigner();
+          const artistAddress = await (await signer).getAddress(); // Obtient l'adresse du compte actif
+          console.log(artistAddress); // Affiche l'adresse dans la console pour vérification
+          // Mettez à jour l'état ou effectuez d'autres actions avec l'adresse obtenue
+          setArtistAddress(artistAddress);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+
+    getSignerAndAddress();
+  }, []);
+
+  /*
   const getAddress = () => {
     const data = localStorage.getItem('address');
     console.log(data);
@@ -81,18 +102,19 @@ export default function RegisterArtist(
       console.log('No address found');
     }
   };
+  */
 
   useEffect(() => {
     const getSigner = async () => {
       if (window.ethereum) {
         const provider = new ethers.BrowserProvider(window.ethereum);
+        await provider.send('eth_requestAccounts', []);
         const signer = provider.getSigner();
         setSigner(await signer);
       }
     };
 
     getSigner();
-    getAddress();
   }, []);
 
   const contractAddress = '0xDfE175b1C9fcE91978B4c018442f96e94B2dBF66';
@@ -187,10 +209,6 @@ export default function RegisterArtist(
     artistAssets,
   ]);
 
-  useEffect(() => {
-    registerArtist();
-  }, [registerArtist]);
-
   // Function to handle checkbox change for extraTypes
   const handleExtraTypeChange = (type: ArtistType, checked: boolean) => {
     if (checked) {
@@ -249,6 +267,14 @@ export default function RegisterArtist(
     fetchArtistData();
   }, [artistAddress]);
 
+  const handleSubmit = useCallback(
+    (event) => {
+      event.preventDefault(); // Empêche la soumission standard du formulaire
+      registerArtist(); // Appelle directement registerArtist
+    },
+    [registerArtist],
+  );
+
   return (
     <>
       <Sidebar />
@@ -257,151 +283,148 @@ export default function RegisterArtist(
           <h1 className="mt-2 text-2xl font-semibold text-white mb-4 ml-12">
             Register as Artist
           </h1>
-
-          <div className="flex flex-col gap-2 px-12">
-            <div className="block mt-4">
-              <Label
-                className="font-bold text-white"
-                htmlFor="artistAddress"
-                value="My address"
-              />
-              <TextInput
-                id="artistAddress"
-                placeholder={artistAddress || 'No address found'}
-                required
-                value={artistAddress || ''}
-                onChange={(e) => setArtistAddress(e.target.value)}
-              />
-            </div>
-            <div className="block mt-4">
-              <label className="font-bold text-white mr-4" htmlFor="isArtist">
-                Are you an artist?
-                <input
-                  id="isArtist"
-                  type="checkbox"
-                  checked={isArtist}
-                  onChange={handleCheckboxChange}
-                  className="ml-2 mb-1"
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-2 px-12">
+              <div className="block mt-4">
+                <Label
+                  className="font-bold text-white"
+                  htmlFor="artistAddress"
+                  value="My address"
                 />
-              </label>
-            </div>
-            <div className="block mt-4">
-              <Label
-                className="font-bold text-white"
-                htmlFor="mainName"
-                value="Main Name"
-              />
-              <TextInput
-                id="mainName"
-                placeholder="Enter your main name"
+                <TextInput
+                  id="artistAddress"
+                  placeholder={artistAddress || 'No address found'}
+                  required
+                  value={artistAddress || ''}
+                  onChange={(e) => setArtistAddress(e.target.value)}
+                />
+              </div>
+              <div className="block mt-4">
+                <label className="font-bold text-white mr-4" htmlFor="isArtist">
+                  Are you an artist?
+                  <input
+                    id="isArtist"
+                    type="checkbox"
+                    checked={isArtist}
+                    onChange={handleCheckboxChange}
+                    className="ml-2 mb-1"
+                  />
+                </label>
+              </div>
+              <div className="block mt-4">
+                <Label
+                  className="font-bold text-white"
+                  htmlFor="mainName"
+                  value="Main Name"
+                />
+                <TextInput
+                  id="mainName"
+                  placeholder="Enter your main name"
+                  required
+                  value={mainName || ''}
+                  onChange={(e) => setMainName(e.target.value)}
+                />
+              </div>
+              <div className="block">
+                <Label
+                  className="font-bold text-white"
+                  htmlFor="mainType"
+                  value="mainType"
+                />
+              </div>
+              <Select
+                id="mainType"
+                value={mainType !== null ? mainType.toString() : ''}
                 required
-                value={mainName || ''}
-                onChange={(e) => setMainName(e.target.value)}
-              />
-            </div>
-            <div className="block">
-              <Label
-                className="font-bold text-white"
-                htmlFor="mainType"
-                value="mainType"
-              />
-            </div>
-            <Select
-              id="mainType"
-              value={mainType !== null ? mainType.toString() : ''}
-              required
-              onChange={(e) =>
-                setMainType(parseInt(e.target.value) as ArtistType)
-              }
-              style={{ color: 'black' }}
-            >
-              {Object.keys(ArtistType)
-                .filter((key) => !isNaN(Number(ArtistType[key])))
-                .map((key) => (
-                  <option key={ArtistType[key]} value={ArtistType[key]}>
-                    {key}
-                  </option>
-                ))}
-            </Select>
-            <div className="block mt-4">
-              <Label
-                className="font-bold text-white"
-                htmlFor="extraTypes"
-                value="Select your other types"
-              />
-            </div>
-            <div id="extraTypes">
-              {Object.keys(ArtistType)
-                .filter((key) => isNaN(Number(key)))
-                .map((type, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center mb-2 text-white"
-                  >
-                    <input
-                      type="checkbox"
-                      id={`extraType-${type}`}
-                      checked={extraTypes.includes(
-                        ArtistType[type as keyof typeof ArtistType],
-                      )}
-                      onChange={(e) =>
-                        handleExtraTypeChange(
+                onChange={(e) =>
+                  setMainType(parseInt(e.target.value) as ArtistType)
+                }
+                style={{ color: 'black' }}
+              >
+                {Object.keys(ArtistType)
+                  .filter((key) => !isNaN(Number(ArtistType[key])))
+                  .map((key) => (
+                    <option key={ArtistType[key]} value={ArtistType[key]}>
+                      {key}
+                    </option>
+                  ))}
+              </Select>
+              <div className="block mt-4">
+                <Label
+                  className="font-bold text-white"
+                  htmlFor="extraTypes"
+                  value="Select your other types"
+                />
+              </div>
+              <div id="extraTypes">
+                {Object.keys(ArtistType)
+                  .filter((key) => isNaN(Number(key)))
+                  .map((type, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center mb-2 text-white"
+                    >
+                      <input
+                        type="checkbox"
+                        id={`extraType-${type}`}
+                        checked={extraTypes.includes(
                           ArtistType[type as keyof typeof ArtistType],
-                          e.target.checked,
-                        )
-                      }
-                    />
-                    <label htmlFor={`extraType-${type}`} className="ml-2">
-                      {type}
-                    </label>
-                  </div>
-                ))}
+                        )}
+                        onChange={(e) =>
+                          handleExtraTypeChange(
+                            ArtistType[type as keyof typeof ArtistType],
+                            e.target.checked,
+                          )
+                        }
+                      />
+                      <label htmlFor={`extraType-${type}`} className="ml-2">
+                        {type}
+                      </label>
+                    </div>
+                  ))}
+              </div>
+              <div className="block">
+                <Label
+                  className="font-bold text-white"
+                  htmlFor="genres"
+                  value="Genres (comma-separated)"
+                />
+                <TextInput
+                  id="genres"
+                  placeholder="Enter genres, separated by commas"
+                  required
+                  value={artistGenres.join(', ')}
+                  onChange={(e) =>
+                    setArtistGenres(
+                      e.target.value.split(',').map((genre) => genre.trim()),
+                    )
+                  }
+                />
+              </div>
+              <div className="block">
+                <Label
+                  className="font-bold text-white"
+                  htmlFor="assets"
+                  value="Assets (comma-separated)"
+                />
+                <TextInput
+                  id="assets"
+                  placeholder="Enter assets, separated by commas"
+                  required
+                  value={artistAssets.join(', ')}
+                  onChange={(e) =>
+                    setArtistAssets(
+                      e.target.value.split(',').map((asset) => asset.trim()),
+                    )
+                  }
+                />
+              </div>
             </div>
-            <div className="block">
-              <Label
-                className="font-bold text-white"
-                htmlFor="genres"
-                value="Genres (comma-separated)"
-              />
-              <TextInput
-                id="genres"
-                placeholder="Enter genres, separated by commas"
-                required
-                value={artistGenres.join(', ')}
-                onChange={(e) =>
-                  setArtistGenres(
-                    e.target.value.split(',').map((genre) => genre.trim()),
-                  )
-                }
-              />
-            </div>
-            <div className="block">
-              <Label
-                className="font-bold text-white"
-                htmlFor="assets"
-                value="Assets (comma-separated)"
-              />
-              <TextInput
-                id="assets"
-                placeholder="Enter assets, separated by commas"
-                required
-                value={artistAssets.join(', ')}
-                onChange={(e) =>
-                  setArtistAssets(
-                    e.target.value.split(',').map((asset) => asset.trim()),
-                  )
-                }
-              />
-            </div>
-          </div>
 
-          <Button
-            className="mt-6 ml-12 w-1/2"
-            color="purple"
-            onClick={registerArtist}
-          >
-            Submit
-          </Button>
+            <Button type="submit" className="mt-6 ml-12 w-1/2" color="purple">
+              Submit
+            </Button>
+          </form>
         </section>
       </main>
     </>
